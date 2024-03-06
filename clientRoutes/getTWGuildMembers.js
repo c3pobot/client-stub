@@ -4,14 +4,17 @@ const playerCache = require('../playerCache');
 
 const getMember = async(playerId, projection)=>{
   try{
-    let data = await playerCache.get('playerCache', playerId, null, projection)
+    let data = await playerCache.get('twPlayerCache', playerId, null, projection)
+    if(!data){
+      data = await playerCache.get('playerCache', playerId, null, projection)
+      if(data?.allyCode) playerCache.set('twPlayerCache', playerId, +data.allyCode, data)
+    }
     if(!data) data = await getPlayer({ playerId: playerId }, { collection: 'twPlayerCache'}, false)
     return data
   }catch(e){
     throw(e)
   }
 }
-
 module.exports = async(members = [], projection)=>{
   try{
     let array = [], res = [], i = members.length

@@ -1,24 +1,26 @@
 'use strict'
+const log = require('logger')
 const mongo = require('mongoclient');
 const queryPlayer = require('./queryPlayer');
 const formatPlayer = require('./format/formatPlayer');
 const statCalc = require('../statCalc');
+const playerCache = require('../playerCahce');
+const guildIdCache = require('guildIdCache')
 
-module.exports = async(payload = {}, opt = {})=>{
+module.exports = async(payload = {}, opt = {}, cachGuildId = true)=>{
   try{
     let collection = opt.collection || 'playerCache'
-    let obj = await queryPlayer(payload)
-    if(!obj?.rosterUnit || obj.rosterUnit.length === 0) return
-    let stats = await statCalc.CalcRosterStats(obj.rosterUnit, obj.allyCode, true)
+    let data = await queryPlayer(payload)
+    if(!data?.rosterUnit || data.rosterUnit.length === 0) return
+    let stats = await statCalc.CalcRosterStats(data, true)
     if(!stats?.omiCount) return
-    obj = {...obj,...stats}
-    await formatPlayer(obj)
-    if(!obj?.gp) return
-    mongo.set(collection, {_id: obj.playerId}, obj)
-    if(obj?.guildId)
+    data = {...data,...stats}
+    await formatPlayer(data)
+    if(!data?.gp) return
+    playerCache.set(collection, data.playerId, data)
+    if(cachGuildId) guildIdCache.set(data?.playerId, +data?.allyCode, data?.guildId)
     return obj
   }catch(e){
-    console.error(e?.message)
-    console.error('Get Player Error')
+    log.error(e)
   }
 }

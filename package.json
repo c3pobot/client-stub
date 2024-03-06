@@ -4,15 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "update": "chmod a+x updategitdependency.sh && ./updategitdependency.sh"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "crypto-js": "^4.1.1",
     "google-auth-library": "^8.1.1",
-    "json-array-sorter": "^0.0.5",
     "logger": "github:c3pobot/logger",
+    "mongoclient": "github:c3pobot/mongoclient",
     "node-fetch": "^2.6.12",
     "statcalc": "github:c3pobot/statcalc"
   }

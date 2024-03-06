@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const processAPIRequest = require('../processAPIRequest');
 const mongo = require('mongoclient')
 
@@ -16,6 +17,6 @@ module.exports = async(opt = {})=>{
     }
     return guildId
   }catch(e){
-    console.error(e)
+    log.error(e)
   }
 }

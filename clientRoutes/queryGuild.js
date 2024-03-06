@@ -4,6 +4,6 @@ module.exports = async(guildId, includeActivity = false)=>{
   try{
     if(guildId) return await processAPIRequest('guild', {guildId: guildId, includeRecentGuildActivityInfo: includeActivity})
   }catch(e){
-    console.error(e)
+    throw(e)
   }
 }
